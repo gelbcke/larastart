@@ -37,37 +37,37 @@ Se você encontrar algum problema de segurança, entre em contato comigo em juni
 
 # Feito e á Fazer
 
-<input type="checkbox" checked /> Autenticação do usuário
+-   [x] Autenticação do usuário
 
-<input type="checkbox" checked /> Chave primária padrão do usuário como UUID
+-   [x] Chave primária padrão do usuário como UUID
 
-<input type="checkbox" checked /> Sessão única para usuários
+-   [x] Sessão única para usuários
 
-<input type="checkbox" checked /> Opção para desativar o acesso do usuário
+-   [x] Opção para desativar o acesso do usuário
 
-<input type="checkbox" checked /> Autenticação 2FA com Google Authenticator/Authy _(Ativado pelo usuário)_
+-   [x] Autenticação 2FA com Google Authenticator/Authy _(Ativado pelo usuário)_
 
-<input type="checkbox" checked /> Bloqueio automático do sistema por inatividade _(Ativado pelo usuário)_
+-   [x] Bloqueio automático do sistema por inatividade _(Ativado pelo usuário)_
 
-<input type="checkbox" checked /> Backend com AdminLTE 3.2.0
+-   [x] Backend com AdminLTE 3.2.0
 
-<input type="checkbox" checked /> Vários temas
+-   [x] Vários temas
 
-<input type="checkbox" checked /> Selecionador de idioma
+-   [x] Selecionador de idioma
 
-<input type="checkbox" checked /> Sistema de Log
+-   [x] Sistema de Log
 
-<input type="checkbox" checked /> Configurações do sistema (moeda, fuso horário, formato de data e hora)
+-   [x] Configurações do sistema (moeda, fuso horário, formato de data e hora)
 
-<input type="checkbox" /> Permissão de grupos e funções
+-   [ ] Permissão de grupos e funções
 
-<input type="checkbox" /> Autenticação 2FA com e-mail
+-   [ ] Autenticação 2FA com e-mail
 
-<input type="checkbox" /> Bate-papo interno
+-   [ ] Bate-papo interno
 
-<input type="checkbox" /> Caixa de Correio (Caixa de Entrada, Escrita e Leitura)
+-   [ ] Caixa de Correio (Caixa de Entrada, Escrita e Leitura)
 
-<input type="checkbox" /> Tradução para alemão, francês e espanhol
+-   [ ] Tradução para alemão, francês e espanhol
 
 ---
 

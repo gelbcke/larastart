@@ -37,37 +37,37 @@ If you find any security issue, please contact me on juniorgelbcke@gmail.com
 
 # Done and To Do
 
-<input type="checkbox" checked /> User Authentication
+-   [x] User Authentication
 
-<input type="checkbox" checked /> User default primary key as UUID
+-   [x] User default primary key as UUID
 
-<input type="checkbox" checked /> Single session for users
+-   [x] Single session for users
 
-<input type="checkbox" checked /> Option to deactivate user access
+-   [x] Option to deactivate user access
 
-<input type="checkbox" checked /> 2FA autentication with Google Authenticator/Authy _(Enabled by user)_
+-   [x] 2FA autentication with Google Authenticator/Authy _(Enabled by user)_
 
-<input type="checkbox" checked /> Auto Lock system by inactivity _(Enabled by user)_
+-   [x] Auto Lock system by inactivity _(Enabled by user)_
 
-<input type="checkbox" checked /> Backend with AdminLTE 3.2.0
+-   [x] Backend with AdminLTE 3.2.0
 
-<input type="checkbox" checked /> Multi theme
+-   [x] Multi theme
 
-<input type="checkbox" checked /> Language Switcher
+-   [x] Language Switcher
 
-<input type="checkbox" checked /> Log System
+-   [x] Log System
 
-<input type="checkbox" checked /> System Settings (currency, timezone, date and time format)
+-   [x] System Settings (currency, timezone, date and time format)
 
-<input type="checkbox" /> Groups and Roles Permission
+-   [ ] Groups and Roles Permission
 
-<input type="checkbox" /> 2FA authentication with e-mail
+-   [ ] 2FA authentication with e-mail
 
-<input type="checkbox" /> Internal Chat
+-   [ ] Internal Chat
 
-<input type="checkbox" /> Mailbox (Inbox, Composer and Read)
+-   [ ] Mailbox (Inbox, Composer and Read)
 
-<input type="checkbox" /> Translation to German, French and Spanish
+-   [ ] Translation to German, French and Spanish
 
 ---
 
