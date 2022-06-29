@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $viewPaths = ['layouts.app', 'backend.user.profile', 'backend.user.user_profile'];
+        $viewPaths = ['welcome', 'layouts.app', 'backend.user.profile', 'backend.user.user_profile'];
 
         View::composer($viewPaths, function ($view) {
 
