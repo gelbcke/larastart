@@ -29,7 +29,6 @@ class ThemeServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             if (Auth::check()) {
-                $auth_user = Auth::user();
 
                 $avl_themes = collect([
 
@@ -77,13 +76,9 @@ class ThemeServiceProvider extends ServiceProvider
 
                 $Sthemes = $avl_themes->sortBy('name');
 
-                $user_theme = User::where('id', $auth_user->id)
-                    ->get();
-
-                $apply_theme = $avl_themes->where('name', $user_theme[0]->theme);
+                $apply_theme = $avl_themes->where('name', auth()->user()->theme);
 
                 View::share(compact([
-                    'auth_user',
                     'apply_theme',
                     'Sthemes'
                 ]));
