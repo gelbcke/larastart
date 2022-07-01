@@ -1,36 +1,48 @@
 <?php
+
 namespace App\Traits;
+
 use Illuminate\Support\Str;
+
 trait Uuids
 {
-   /**
-     * Boot function from Laravel.
-     */
-    protected static function boot()
+    public function initializeUuidForKey()
     {
-        parent::boot();
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
-            }
-        });
+        $this->keyType = 'string';
     }
-   /**
-     * Get the value indicating whether the IDs are incrementing.
+
+    /**
+     * Override the getIncrementing() function to return false to tell
+     * Laravel that the identifier does not auto increment (it's a string).
      *
      * @return bool
      */
-    public function getIncrementing()
+    public function getIncrementing(): bool
     {
         return false;
     }
-   /**
-     * Get the auto-incrementing key type.
+
+    /**
+     * Tell laravel that the key type is a string, not an integer.
      *
      * @return string
      */
-    public function getKeyType()
+    public function getKeyType(): string
     {
         return 'string';
+    }
+
+    /**
+     * Boot function from Laravel
+     */
+    protected static function bootUuids()
+    {
+        $creationCallback = function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        };
+
+        static::creating($creationCallback);
     }
 }

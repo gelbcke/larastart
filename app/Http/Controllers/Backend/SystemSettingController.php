@@ -21,6 +21,8 @@ class SystemSettingController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', '2fa']);
+        $this->middleware('permission:settings-list', ['only' => ['index', 'settings']]);
+        $this->middleware('permission:settings-update', ['only' => 'update']);
     }
 
     /**

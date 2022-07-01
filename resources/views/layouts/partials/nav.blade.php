@@ -12,15 +12,6 @@
 			<a href="{{ route('profile', auth()->user()->id) }}" class="nav-link">{{ __('layouts.profile') }}</a>
 		</li>
 	</ul>
-	<ul class="navbar-nav ml-auto">
-		<li class="nav-item dropdown">
-			<a class="nav-link">
-				<div id="clock">
-					<b>{{ \Carbon\Carbon::now()->setTimezone($app_s->timezone->name)->format($app_s->clock_format) }}</b>
-				</div>
-			</a>
-		</li>
-	</ul>
 	<!-- Right navbar links -->
 	<ul class="navbar-nav ml-auto">
 		<!-- Language Dropdown Menu -->
@@ -65,6 +56,12 @@
 				</a>
 				<a href="{{ route('logs.index') }}" class="dropdown-item">
 					{{ __('layouts.logs') }}
+				</a>
+				<a href="{{ route('roles.index') }}" class="dropdown-item">
+					{{ __('layouts.roles') }}
+				</a>
+				<a href="{{ route('permissions.index') }}" class="dropdown-item">
+					{{ __('layouts.permissions') }}
 				</a>
 				<a href="{{ route('system_settings') }}" class="dropdown-item">
 					{{ __('layouts.system_settings') }}

@@ -10,5 +10,6 @@ return [
     'alerts' => [
         'user_activated' => 'User successfully activated!',
         'user_deactivated' => 'User successfully deactivated!',
+        'user_created' => 'User successfully created!'
     ],
 ];

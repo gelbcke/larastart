@@ -59,14 +59,6 @@
 
 	@yield('scripts')
 
-	<!-- Update Clock -->
-	<script type="text/javascript">
-	 $(document).ready(function() {
-	  setInterval(function() {
-	   $("#clock").load(" #clock");
-	  }, 1000);
-	 });
-	</script>
 </body>
 
 </html>

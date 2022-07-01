@@ -69,6 +69,9 @@ class Kernel extends HttpKernel
         'check_user_single_session' => \App\Http\Middleware\CheckSingleSession::class,
         '2fa' => \App\Http\Middleware\LoginSecurityMiddleware::class,
         'auth.lock' => \App\Http\Middleware\AuthLockSession::class,
-        "language" => \App\Http\Middleware\Language::class
+        'language' => \App\Http\Middleware\Language::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 }

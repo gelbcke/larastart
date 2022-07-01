@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -25,6 +28,11 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', '2fa']);
+        $this->middleware('permission:users-list');
+        $this->middleware('permission:users-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:users-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:users-activate', ['only' => ['active']]);
+        $this->middleware('permission:users-deactivate', ['only' => ['deactive']]);
     }
 
     /**
@@ -40,9 +48,15 @@ class UserController extends Controller
     public function getUsers(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::select('*');
+
+            $data = User::select(['id', 'name', 'email', 'phone', 'status', 'created_at'])->with('roles');
+
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('role', function ($row) {
+                    $role = $row->roles->first()->name;
+                    return $role;
+                })
                 ->addColumn('action', function ($row) {
 
                     if ($row->status == 1) {
@@ -53,6 +67,7 @@ class UserController extends Controller
 
                     $btn = '
                     <a href="' . route("user.profile", $row->id) . '" class="fa-solid fa-eye" title="' . __('global.form.view') . '" style="color: #0069d9; margin-right: 5px"></a>
+                    <a href="' . route("users.edit", $row->id) . '" class="fa-solid fa-pen-to-square" title="' . __('global.form.edit') . '" style="color: #0069d9; margin-right: 5px"></a>
                     ' . $status_btn . '
                     ';
 
@@ -80,15 +95,46 @@ class UserController extends Controller
                         return  '<span class="badge bg-success">' . __('global.status.activated') . '</span>';
                     return 'Cancel';
                 })
-                ->rawColumns(['action', 'name', 'status'])
+                ->rawColumns(['role', 'action', 'name', 'status'])
                 ->make(true);
         }
     }
 
     public function create()
     {
-        return view('backend.user.create');
+        $roles = Role::latest()->get();
+        return view('backend.user.create', compact('roles'));
     }
+
+    public function edit(User $user)
+    {
+        $userRole = $user->roles->pluck('name')->toArray();
+        $roles = Role::latest()->get();
+
+        return view(
+            'backend.user.edit',
+            compact('user', 'userRole', 'roles')
+        );
+    }
+
+    /**
+     * Update user data
+     *
+     * @param User $user
+     * @param UpdateUserRequest $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(User $user, UpdateUserRequest $request)
+    {
+        $user->update($request->validated());
+
+        $user->syncRoles($request->get('role'));
+
+        return redirect()->route('users.index')
+            ->withSuccess(__('User updated successfully.'));
+    }
+
 
     public function profile(User $user)
     {
@@ -110,7 +156,7 @@ class UserController extends Controller
         return view('backend.user.user_profile', compact('user', 'languages'));
     }
 
-    public function update(User $user, Request $request)
+    public function update_profile(User $user, Request $request)
     {
         $this->validate($request, [
             'language'  => 'in:en,pt_BR',
@@ -158,37 +204,47 @@ class UserController extends Controller
         }
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created user
+     *
+     * @param User $user
+     * @param StoreUserRequest $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreUserRequest $request)
     {
-        $this->validate($request, [
-            'name'      => 'required',
-            'email'     => 'required|email|unique:users',
-            'password'  => [
-                'required',
-                'min:6'
-            ],
-            'language'  => 'in:en,pt_BR',
-            'theme' => 'in:Default,Default Dark,Mini Light,Mini Dark,Open Sidebar Light,Open Sidebar Dark,Hide Sidebar Light,Hide Sidebar Dark'
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+            ]);
 
-        $newUser = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-        ]);
+            $user->syncRoles($request->get('role'));
 
-        activity()
-            ->causedBy(Auth::user()->id)
-            ->event('created')
-            ->withProperties($request)
-            ->tap(function (Activity $activity) use ($request) {
-                $activity->log_name = 'User';
-                $activity->subject_type = 'App\Models\User';
-                $activity->ip = $request->ip();
-            })
-            ->log('User ID: ' . $newUser->id . ' has been created');
+            activity()
+                ->causedBy(Auth::user()->id)
+                ->event('created')
+                ->withProperties($request)
+                ->tap(function (Activity $activity) use ($request) {
+                    $activity->log_name = 'User';
+                    $activity->subject_type = 'App\Models\User';
+                    $activity->ip = $request->ip();
+                })
+                ->log('User ID: ' . $user->id . ' has been created');
 
-        return back();
+            Alert::success(__('global.alerts.success'), __('users.alerts.user_created'));
+
+            return route('users.index');
+        } catch (\Exception $e) {
+            throw new ValidationException($e);
+
+            Alert::error(__('global.alerts.error'), $e);
+
+            return back()
+                ->withInput();
+        }
     }
 
     public function change_language(Request $request, $language)

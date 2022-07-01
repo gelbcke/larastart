@@ -1,8 +1,7 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\System;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Timezone;
 use Illuminate\Database\Seeder;
 

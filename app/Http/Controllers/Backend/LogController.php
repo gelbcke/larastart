@@ -19,6 +19,8 @@ class LogController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', '2fa']);
+        $this->middleware('permission:logs-list', ['only' => ['index', 'getLogs']]);
+        $this->middleware('permission:logs-clear', ['only' => 'clearLogs']);
     }
 
     /**
@@ -35,12 +37,6 @@ class LogController extends Controller
     public function getLogs()
     {
         $dump = Activity::all();
-
-        /*
-        foreach ($dump as $log) {
-            $log->properties = json_encode($log->properties['attributes']);
-        }
-        */
 
         return DataTables::of($dump)
             ->addColumn('causer', function (Activity $activity) {

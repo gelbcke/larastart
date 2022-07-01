@@ -32,7 +32,9 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
 
     Route::get('/users', [App\Http\Controllers\Backend\UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [App\Http\Controllers\Backend\UserController::class, 'create'])->name('users.create');
+    Route::get('/users/edit/{user}', [App\Http\Controllers\Backend\UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/store', [App\Http\Controllers\Backend\UserController::class, 'store'])->name('users.store');
+    Route::patch('/users/update/{user}', [App\Http\Controllers\Backend\UserController::class, 'update'])->name('users.update');
     Route::get('/users/getUsers', [App\Http\Controllers\Backend\UserController::class, 'getUsers'])->name('users.get');
     Route::get('/users/lockscreen', [App\Http\Controllers\Backend\UserController::class, 'lockscreen'])->name('users.lockscreen');
 
@@ -41,7 +43,7 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
 
     Route::get('/user/profile/{user}', [App\Http\Controllers\Backend\UserController::class, 'user_profile'])->name('user.profile');
     Route::get('/profile/{user}', [App\Http\Controllers\Backend\UserController::class, 'profile'])->name('profile');
-    Route::post('/profile/{user}', [App\Http\Controllers\Backend\UserController::class, 'update'])->name('profile.update');
+    Route::post('/profile/{user}', [App\Http\Controllers\Backend\UserController::class, 'update_profile'])->name('profile.update');
 
     Route::get('/system/settings', [App\Http\Controllers\Backend\SystemSettingController::class, 'index'])->name('system_settings');
     Route::get('/system/settings/edit', [App\Http\Controllers\Backend\SystemSettingController::class, 'settings'])->name('system_settings.edit');
@@ -55,6 +57,13 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
     Route::post('/2fa/secret', [App\Http\Controllers\Backend\LoginSecurityController::class, 'generate2faSecret'])->name('generate2faSecret');
     Route::post('/2fa/enable', [App\Http\Controllers\Backend\LoginSecurityController::class, 'enable2fa'])->name('enable2fa');
     Route::post('/2fa/disable', [App\Http\Controllers\Backend\LoginSecurityController::class, 'disable2fa'])->name('disable2fa');
+
+
+
+    Route::resource('/roles', App\Http\Controllers\RoleController::class);
+    Route::resource('/permissions', App\Http\Controllers\PermissionController::class);
+
+
 
     // 2fa middleware
     Route::post('/2faVerify', function () {
