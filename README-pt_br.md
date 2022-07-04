@@ -59,7 +59,7 @@ Se você encontrar algum problema de segurança, entre em contato comigo em juni
 
 -   [x] Configurações do sistema (moeda, fuso horário, formato de data e hora)
 
--   [ ] Permissão de grupos e funções
+-   [x] Permissão de grupos e funções
 
 -   [ ] Autenticação 2FA com e-mail
 

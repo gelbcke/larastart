@@ -59,7 +59,7 @@ If you find any security issue, please contact me on juniorgelbcke@gmail.com
 
 -   [x] System Settings (currency, timezone, date and time format)
 
--   [ ] Groups and Roles Permission
+-   [x] Groups and Roles Permission
 
 -   [ ] 2FA authentication with e-mail
 
