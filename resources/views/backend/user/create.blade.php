@@ -13,7 +13,7 @@
 				<div class="col-12">
 					<div class="card">
 						<div class="card-body">
-							<p class="login-box-msg">{{ __('auth.register_new_member') }}</p>
+							<h3 class="login-box-msg">{{ __('auth.register_new_member') }}</h3>
 
 							<form method="POST" action="{{ route('users.store') }}" autocomplete="off">
 								@csrf
@@ -64,6 +64,7 @@
 										</span>
 									@enderror
 								</div>
+
 
 								<div class="mb-3">
 									<label for="role" class="form-label">Role</label>

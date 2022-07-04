@@ -9,7 +9,7 @@
 			<a href="{{ route('home') }}" class="nav-link">{{ __('layouts.home') }}</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="{{ route('profile', auth()->user()->id) }}" class="nav-link">{{ __('layouts.profile') }}</a>
+			<a href="{{ route('my.profile', auth()->user()->id) }}" class="nav-link">{{ __('layouts.profile') }}</a>
 		</li>
 	</ul>
 	<!-- Right navbar links -->
@@ -48,7 +48,7 @@
 				{{ explode(' ', auth()->user()->name)[0] }}
 			</a>
 			<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-				<a href="{{ route('profile', auth()->user()->id) }}" class="dropdown-item">
+				<a href="{{ route('my.profile', auth()->user()->id) }}" class="dropdown-item">
 					{{ __('layouts.profile') }}
 				</a>
 				<a href="{{ route('users.index') }}" class="dropdown-item">

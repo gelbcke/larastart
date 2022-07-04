@@ -115,69 +115,7 @@
 				<div class="col-md-9">
 					<div class="card">
 						<div class="card-body">
-							<form class="form-horizontal" action="{{ route('profile.update', $user->id) }}" method="PATCH"
-								enctype="multipart/form-data">
-								@method('PATCH')
-								@csrf
-								<div class="form-group row">
-									<label for="name" class="col-sm-2 col-form-label">{{ __('global.name') }}</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-											value="{{ $user->name }}" placeholder="{{ __('global.name') }}">
-										@error('name')
-											<span class="invalid-feedback" role="alert">
-												<strong>{{ $message }}</strong>
-											</span>
-										@enderror
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label for="email" class="col-sm-2 col-form-label">{{ __('global.email') }}</label>
-									<div class="col-sm-10">
-										<input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-											value="{{ $user->email }}" placeholder="{{ __('global.email') }}">
-										@error('email')
-											<span class="invalid-feedback" role="alert">
-												<strong>{{ $message }}</strong>
-											</span>
-										@enderror
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label for="phone" class="col-sm-2 col-form-label">{{ __('global.phone') }}</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone"
-											value="{{ $user->phone }}" placeholder="{{ __('global.phone') }}"
-											data-inputmask='"mask": "(999) 9999-9999"' data-mask>
-										@error('phone')
-											<span class="invalid-feedback" role="alert">
-												<strong>{{ $message }}</strong>
-											</span>
-										@enderror
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label for="location" class="col-sm-2 col-form-label">{{ __('global.location') }}</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control @error('location') is-invalid @enderror" id="location"
-											name="location" value="{{ $user->location }}" placeholder="{{ __('global.location') }}">
-										@error('location')
-											<span class="invalid-feedback" role="alert">
-												<strong>{{ $message }}</strong>
-											</span>
-										@enderror
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<div class="offset-sm-2 col-sm-10">
-										<button type="submit" class="btn btn-success btn-block">{{ __('global.form.save') }}</button>
-									</div>
-								</div>
-							</form>
+							Insert User activities here
 						</div><!-- /.card-body -->
 					</div>
 					<!-- /.card -->

@@ -91,8 +91,14 @@
 	     name: 'phone'
 	    },
 	    {
-	     data: 'role',
-	     name: 'role'
+	     data: 'roles',
+	     className: 'roles',
+	     render: function(data) {
+	      // data is your array of roles, do what you like with it
+	      let names = data.map(x => x.name);
+	      return names.join("<br/>");
+
+	     }
 	    },
 	    {
 	     data: 'status',

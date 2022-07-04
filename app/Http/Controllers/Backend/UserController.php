@@ -52,11 +52,6 @@ class UserController extends Controller
             $data = User::select(['id', 'name', 'email', 'phone', 'status', 'created_at'])->with('roles');
 
             return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('role', function ($row) {
-                    $role = $row->roles->first()->name;
-                    return $role;
-                })
                 ->addColumn('action', function ($row) {
 
                     if ($row->status == 1) {
@@ -86,7 +81,7 @@ class UserController extends Controller
                     }
                 })
                 ->editColumn('name', function ($user) {
-                    return '<a href="' . route('profile', $user->id) . '">' . $user->name . '</a>  ';
+                    return '<a href="' . route('user.profile', $user->id) . '">' . $user->name . '</a>  ';
                 })
                 ->editColumn('status', function ($inquiry) {
                     if ($inquiry->status == 0)
@@ -95,7 +90,7 @@ class UserController extends Controller
                         return  '<span class="badge bg-success">' . __('global.status.activated') . '</span>';
                     return 'Cancel';
                 })
-                ->rawColumns(['role', 'action', 'name', 'status'])
+                ->rawColumns(['action', 'name', 'status'])
                 ->make(true);
         }
     }
@@ -136,14 +131,14 @@ class UserController extends Controller
     }
 
 
-    public function profile(User $user)
+    public function my_profile(User $user)
     {
         $languages = ([
             "en" => 'en',
             "pt_BR" => 'pt_BR'
         ]);
 
-        return view('backend.user.profile', compact('user', 'languages'));
+        return view('backend.user.profile.my_profile', compact('user', 'languages'));
     }
 
     public function user_profile(User $user)
@@ -153,7 +148,7 @@ class UserController extends Controller
             "pt_BR" => 'pt_BR'
         ]);
 
-        return view('backend.user.user_profile', compact('user', 'languages'));
+        return view('backend.user.profile.user_profile', compact('user', 'languages'));
     }
 
     public function update_profile(User $user, Request $request)
@@ -191,13 +186,13 @@ class UserController extends Controller
                 })
                 ->log('User ID: ' . $user->id . ' has been updated');
 
-            Alert::success(__('global.alerts.success'), __('profile.alerts.profile_updated'));
+            Alert::success([__('global.alerts.success'), __('profile.alerts.profile_updated')]);
 
             return back();
         } catch (\Exception $e) {
             throw new ValidationException($e);
 
-            Alert::error(__('global.alerts.error'), $e);
+            Alert::error([__('global.alerts.error'), $e]);
 
             return back()
                 ->withInput();
@@ -234,13 +229,13 @@ class UserController extends Controller
                 })
                 ->log('User ID: ' . $user->id . ' has been created');
 
-            Alert::success(__('global.alerts.success'), __('users.alerts.user_created'));
+            Alert::success([__('global.alerts.success'), __('users.alerts.user_created')]);
 
-            return route('users.index');
+            return redirect()->route('users.index');
         } catch (\Exception $e) {
             throw new ValidationException($e);
 
-            Alert::error(__('global.alerts.error'), $e);
+            Alert::error([__('global.alerts.error'), $e]);
 
             return back()
                 ->withInput();

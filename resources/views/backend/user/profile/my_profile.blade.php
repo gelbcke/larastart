@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'class' => 'sidebar-mini ',
     'namePage' => __('profile.title'),
-    'activePage' => 'profile',
+    'activePage' => 'my_profile',
     'activeNav' => '',
 ])
 
