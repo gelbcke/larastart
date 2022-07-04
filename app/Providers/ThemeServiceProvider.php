@@ -34,53 +34,51 @@ class ThemeServiceProvider extends ServiceProvider
 
                     (object) [
                         'name' => 'Default',
-                        'body' => 'layout-fixed layout-navbar-fixed layout-footer-fixed',
+                        'body' => 'sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm sidebar-collapse',
                         'nav'  => 'main-header navbar navbar-expand navbar-white navbar-light'
                     ],
                     (object) [
                         'name' => 'Default Dark',
-                        'body' => 'dark-mode layout-fixed layout-navbar-fixed layout-footer-fixed',
+                        'body' => 'dark-mode sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm sidebar-collapse',
                         'nav'  => 'main-header navbar navbar-expand navbar-dark'
                     ],
                     (object) [
-                        'name' => 'Mini Light',
-                        'body' => 'sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm sidebar-collapse layout-footer-fixed',
+                        'name' => 'Big Light',
+                        'body' => 'layout-fixed layout-navbar-fixed',
                         'nav'  => 'main-header navbar navbar-expand navbar-white navbar-light'
                     ],
                     (object) [
-                        'name' => 'Mini Dark',
-                        'body' => 'dark-mode sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm sidebar-collapse layout-footer-fixed',
+                        'name' => 'Big Dark',
+                        'body' => 'dark-mode layout-fixed layout-navbar-fixed',
                         'nav'  => 'main-header navbar navbar-expand navbar-dark'
                     ],
                     (object) [
                         'name' => 'Open Sidebar Light',
-                        'body' => 'sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm layout-footer-fixed',
+                        'body' => 'sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm',
                         'nav'  => 'main-header navbar navbar-expand navbar-white navbar-light'
                     ],
                     (object) [
                         'name' => 'Open Sidebar Dark',
-                        'body' => 'dark-mode sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm layout-footer-fixed',
+                        'body' => 'dark-mode sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-xs sidebar-mini-md text-sm',
                         'nav'  => 'main-header navbar navbar-expand navbar-dark'
                     ],
                     (object) [
                         'name' => 'Hide Sidebar Light',
-                        'body' => 'sidebar-collapse layout-fixed layout-navbar-fixed text-sm layout-footer-fixed',
+                        'body' => 'sidebar-collapse layout-fixed layout-navbar-fixed text-sm',
                         'nav'  => 'main-header navbar navbar-expand navbar-white navbar-light'
                     ],
                     (object) [
                         'name' => 'Hide Sidebar Dark',
-                        'body' => 'dark-mode sidebar-collapse layout-fixed layout-navbar-fixed text-sm layout-footer-fixed',
+                        'body' => 'dark-mode sidebar-collapse layout-fixed layout-navbar-fixed text-sm',
                         'nav'  => 'main-header navbar navbar-expand navbar-dark'
                     ]
                 ]);
-
-                $Sthemes = $avl_themes->sortBy('name');
 
                 $apply_theme = $avl_themes->where('name', auth()->user()->theme);
 
                 View::share(compact([
                     'apply_theme',
-                    'Sthemes'
+                    'avl_themes'
                 ]));
             }
         });

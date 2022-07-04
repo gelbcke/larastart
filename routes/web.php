@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
         Route::prefix('profile')->group(function () {
             Route::get('/{user}', 'user_profile')->name('user.profile');
             Route::get('/my_profile/{user}', 'profile')->name('profile');
-            Route::patch('/{user}', 'update_profile')->name('profile.update');
+            Route::post('/{user}/update', 'update_profile')->name('profile.update');
         });
     });
 

@@ -160,7 +160,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'language'  => 'in:en,pt_BR',
-            'theme' => 'in:Default,Default Dark,Mini Light,Mini Dark,Open Sidebar Light,Open Sidebar Dark,Hide Sidebar Light,Hide Sidebar Dark'
+            'theme' => 'in:Default,Default Dark,Big Light,Big Dark,Open Sidebar Light,Open Sidebar Dark,Hide Sidebar Light,Hide Sidebar Dark'
         ]);
 
         try {

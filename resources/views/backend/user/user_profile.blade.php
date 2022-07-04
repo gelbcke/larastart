@@ -115,8 +115,9 @@
 				<div class="col-md-9">
 					<div class="card">
 						<div class="card-body">
-							<form class="form-horizontal" action="{{ route('profile.update', $user->id) }}" method="POST"
+							<form class="form-horizontal" action="{{ route('profile.update', $user->id) }}" method="PATCH"
 								enctype="multipart/form-data">
+								@method('PATCH')
 								@csrf
 								<div class="form-group row">
 									<label for="name" class="col-sm-2 col-form-label">{{ __('global.name') }}</label>

@@ -278,7 +278,7 @@
 											<label for="theme" class="col-sm-2 col-form-label">{{ __('global.theme') }}</label>
 											<div class="col-sm-10">
 												<select class="form-control @error('theme') is-invalid @enderror" id="theme" name="theme">
-													@foreach ($Sthemes as $theme)
+													@foreach ($avl_themes as $theme)
 														<option value="{{ $theme->name }}" @if ($user->theme == $theme->name) selected="selected" @endif>
 															{{ $theme->name }}</option>
 													@endforeach
