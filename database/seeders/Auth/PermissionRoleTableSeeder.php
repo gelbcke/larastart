@@ -18,6 +18,7 @@ class PermissionRoleTableSeeder extends Seeder
         // Create Roles
         $super_admin = Role::create(['name' => 'super admin']);
         $administrator = Role::create(['name' => 'administrator']);
+        $user = Role::create(['name' => 'user']);
 
         // Create Permissions
         $permissions = Permission::defaultPermissions();
@@ -28,5 +29,10 @@ class PermissionRoleTableSeeder extends Seeder
 
         // Assign Permissions to Roles
         $administrator->givePermissionTo(Permission::all());
+        $user->givePermissionTo([
+            'users-list',
+            'profiles-view-own',
+            'profiles-edit-own',
+        ]);
     }
 }

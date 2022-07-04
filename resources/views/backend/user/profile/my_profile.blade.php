@@ -217,10 +217,10 @@
 								<!-- /.tab-pane -->
 
 								<div class="tab-pane" id="settings">
-									<form class="form-horizontal" action="{{ route('profile.update', $user->id) }}" method="POST"
+									<form class="form-horizontal" action="{{ route('profile.update') }}" method="POST"
 										enctype="multipart/form-data">
 										@csrf
-										@method('POST')
+										@method('PATCH')
 										<div class="form-group row">
 											<label for="name" class="col-sm-2 col-form-label">{{ __('global.name') }}</label>
 											<div class="col-sm-10">

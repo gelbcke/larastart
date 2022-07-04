@@ -34,8 +34,12 @@ class Permission extends SpatiePermission
             'users-list',
             'users-create',
             'users-edit',
-            'users-activate',
-            'users-deactivate',
+            'users-change-status',
+
+            'profiles-view-all',
+            'profiles-view-own',
+            'profiles-edit-all',
+            'profiles-edit-own',
 
             'roles-list',
             'roles-create',

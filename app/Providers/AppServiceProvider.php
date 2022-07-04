@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\SystemSetting;
 use App\Models\User;
+use App\Observers\UserObserver;
 use Illuminate\Support\Composer;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /**
+         * Will assign created user to "USER" role
+         */
+        User::observe(UserObserver::class);
+
+        /**
+         * Share System Settings on views
+         */
         $viewPaths = ['welcome', 'layouts.app', 'backend.user.profile.*', 'backend.system.*'];
 
         View::composer($viewPaths, function ($view) {

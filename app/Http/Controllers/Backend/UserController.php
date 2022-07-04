@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
-use App\Traits\UploadTrait;
 use RealRashid\SweetAlert\Facades\Alert;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +17,6 @@ use Spatie\Activitylog\Models\Activity;
 
 class UserController extends Controller
 {
-    use UploadTrait;
-
     /**
      * Create a new controller instance.
      *
@@ -31,8 +28,7 @@ class UserController extends Controller
         $this->middleware('permission:users-list');
         $this->middleware('permission:users-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:users-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:users-activate', ['only' => ['active']]);
-        $this->middleware('permission:users-deactivate', ['only' => ['deactive']]);
+        $this->middleware('permission:users-change-status', ['only' => ['active', 'deactive']]);
     }
 
     /**
@@ -45,62 +41,23 @@ class UserController extends Controller
         return view('backend.user.index');
     }
 
-    public function getUsers(Request $request)
-    {
-        if ($request->ajax()) {
-
-            $data = User::select(['id', 'name', 'email', 'phone', 'status', 'created_at'])->with('roles');
-
-            return DataTables::of($data)
-                ->addColumn('action', function ($row) {
-
-                    if ($row->status == 1) {
-                        $status_btn = '<a href="' . route("users.deactive", $row->id) . '" title="' . __('global.form.deactivate') . '" class="fa-solid fa-user-xmark" style="color: #dc3545"></a>';
-                    } else {
-                        $status_btn = '<a href="' . route("users.active", $row->id) . '"  title="' . __('global.form.activate') . '" class="fa-solid fa-user-check" style="color: #1e7e34"></a>';
-                    }
-
-                    $btn = '
-                    <a href="' . route("user.profile", $row->id) . '" class="fa-solid fa-eye" title="' . __('global.form.view') . '" style="color: #0069d9; margin-right: 5px"></a>
-                    <a href="' . route("users.edit", $row->id) . '" class="fa-solid fa-pen-to-square" title="' . __('global.form.edit') . '" style="color: #0069d9; margin-right: 5px"></a>
-                    ' . $status_btn . '
-                    ';
-
-                    return $btn;
-                })
-                ->filter(function ($instance) use ($request) {
-                    if ($request->get('status') == '0' || $request->get('status') == '1') {
-                        $instance->where('status', $request->get('status'));
-                    }
-                    if (!empty($request->get('search'))) {
-                        $instance->where(function ($w) use ($request) {
-                            $search = $request->get('search');
-                            $w->orWhere('name', 'LIKE', "%$search%")
-                                ->orWhere('email', 'LIKE', "%$search%");
-                        });
-                    }
-                })
-                ->editColumn('name', function ($user) {
-                    return '<a href="' . route('user.profile', $user->id) . '">' . $user->name . '</a>  ';
-                })
-                ->editColumn('status', function ($inquiry) {
-                    if ($inquiry->status == 0)
-                        return '<span class="badge bg-danger"> ' . __('global.status.deactivated') . '</span>';
-                    if ($inquiry->status == 1)
-                        return  '<span class="badge bg-success">' . __('global.status.activated') . '</span>';
-                    return 'Cancel';
-                })
-                ->rawColumns(['action', 'name', 'status'])
-                ->make(true);
-        }
-    }
-
+    /**
+     * Create a new user
+     *
+     * @return void
+     */
     public function create()
     {
         $roles = Role::latest()->get();
         return view('backend.user.create', compact('roles'));
     }
 
+    /**
+     * Edit user data
+     *
+     * @param User $user
+     * @return void
+     */
     public function edit(User $user)
     {
         $userRole = $user->roles->pluck('name')->toArray();
@@ -128,75 +85,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index')
             ->withSuccess(__('User updated successfully.'));
-    }
-
-
-    public function my_profile(User $user)
-    {
-        $languages = ([
-            "en" => 'en',
-            "pt_BR" => 'pt_BR'
-        ]);
-
-        return view('backend.user.profile.my_profile', compact('user', 'languages'));
-    }
-
-    public function user_profile(User $user)
-    {
-        $languages = ([
-            "en" => 'en',
-            "pt_BR" => 'pt_BR'
-        ]);
-
-        return view('backend.user.profile.user_profile', compact('user', 'languages'));
-    }
-
-    public function update_profile(User $user, Request $request)
-    {
-        $this->validate($request, [
-            'language'  => 'in:en,pt_BR',
-            'theme' => 'in:Default,Default Dark,Big Light,Big Dark,Open Sidebar Light,Open Sidebar Dark,Hide Sidebar Light,Hide Sidebar Dark'
-        ]);
-
-        try {
-            if ($user->id == Auth::user()->id) {
-                Auth::user()->update($request->all());
-            } else {
-                $user->update($request->except(['theme', 'language', 'photo', 'notes']));
-            }
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $extension = $image->getClientOriginalExtension();
-                $image_name = $user->id . "." . $extension;
-
-                $destinationPath = public_path('/img/profiles');
-                $image->move($destinationPath, $image_name);
-                $user->update(['image' => $image_name]);
-            }
-
-            activity()
-                ->causedBy(Auth::user()->id)
-                ->event('updated')
-                ->withProperties($request)
-                ->tap(function (Activity $activity) use ($request) {
-                    $activity->log_name = 'User';
-                    $activity->subject_type = 'App\Models\User';
-                    $activity->ip = $request->ip();
-                })
-                ->log('User ID: ' . $user->id . ' has been updated');
-
-            Alert::success([__('global.alerts.success'), __('profile.alerts.profile_updated')]);
-
-            return back();
-        } catch (\Exception $e) {
-            throw new ValidationException($e);
-
-            Alert::error([__('global.alerts.error'), $e]);
-
-            return back()
-                ->withInput();
-        }
     }
 
     /**
@@ -242,18 +130,12 @@ class UserController extends Controller
         }
     }
 
-    public function change_language(Request $request, $language)
-    {
-        $this->validate($request, [
-            'language'  => 'in:en,pt_BR',
-        ]);
-
-        Auth::user()->update(['language' => $language]);
-
-        Alert::success(__('global.alerts.success'), __('profile.alerts.language_updated'));
-        return back();
-    }
-
+    /**
+     * Active users can make login on system
+     *
+     * @param Request $request
+     * @return void
+     */
     public function active(Request $request)
     {
         $this->validate($request, [
@@ -277,6 +159,12 @@ class UserController extends Controller
         return back()->withInput();
     }
 
+    /**
+     * User deactivated can't make login on system
+     *
+     * @param Request $request
+     * @return void
+     */
     public function deactive(Request $request)
     {
         $this->validate($request, [
@@ -300,12 +188,58 @@ class UserController extends Controller
         return back()->withInput();
     }
 
-    public function lockscreen()
+    /**
+     * List all users
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function getUsers(Request $request)
     {
-        if (Auth::check()) {
-            session(['lock-expires-at' => now()]);
-            alert()->success(__('global.alerts.system_bloked'));
-            return redirect()->route('login.locked');
+        if ($request->ajax()) {
+
+            $data = User::select(['id', 'name', 'email', 'phone', 'status', 'created_at'])->with('roles');
+
+            return DataTables::of($data)
+                ->addColumn('action', function ($row) {
+                    if ($row->status == 1) {
+                        $status_btn = '<a href="' . route("users.deactive", $row->id) . '" title="' . __('global.form.deactivate') . '" class="fa-solid fa-user-xmark" style="color: #dc3545"></a>';
+                    } else {
+                        $status_btn = '<a href="' . route("users.active", $row->id) . '"  title="' . __('global.form.activate') . '" class="fa-solid fa-user-check" style="color: #1e7e34"></a>';
+                    }
+
+                    $btn = '
+                    <a href="' . route("user.profile", $row->id) . '" class="fa-solid fa-eye" title="' . __('global.form.view') . '" style="color: #0069d9; margin-right: 5px"></a>
+                    <a href="' . route("users.edit", $row->id) . '" class="fa-solid fa-pen-to-square" title="' . __('global.form.edit') . '" style="color: #0069d9; margin-right: 5px"></a>
+                    ' . $status_btn . '
+                    ';
+
+                    return $btn;
+                })
+                ->filter(function ($instance) use ($request) {
+                    if ($request->get('status') == '0' || $request->get('status') == '1') {
+                        $instance->where('status', $request->get('status'));
+                    }
+                    if (!empty($request->get('search'))) {
+                        $instance->where(function ($w) use ($request) {
+                            $search = $request->get('search');
+                            $w->orWhere('name', 'LIKE', "%$search%")
+                                ->orWhere('email', 'LIKE', "%$search%");
+                        });
+                    }
+                })
+                ->editColumn('name', function ($user) {
+                    return '<a href="' . route('user.profile', $user->id) . '">' . $user->name . '</a>  ';
+                })
+                ->editColumn('status', function ($inquiry) {
+                    if ($inquiry->status == 0)
+                        return '<span class="badge bg-danger"> ' . __('global.status.deactivated') . '</span>';
+                    if ($inquiry->status == 1)
+                        return  '<span class="badge bg-success">' . __('global.status.activated') . '</span>';
+                    return 'Cancel';
+                })
+                ->rawColumns(['action', 'name', 'status'])
+                ->make(true);
         }
     }
 }

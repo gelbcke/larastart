@@ -48,7 +48,7 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
         ->withoutMiddleware('auth.lock')->name('login.locked');
 
     /**
-     * User / Profile
+     * User
      */
     Route::controller(App\Http\Controllers\Backend\UserController::class)->group(function () {
         Route::prefix('users')->group(function () {
@@ -58,16 +58,21 @@ Route::group(['middleware' => ['auth', 'check_user_status', 'check_user_single_s
             Route::post('/store', 'store')->name('users.store');
             Route::patch('/update/{user}', 'update')->name('users.update');
             Route::get('/getUsers', 'getUsers')->name('users.get');
-            Route::get('/{language}', 'change_language')->name('lang.update');
-            Route::get('/lockscreen', 'lockscreen')->name('users.lockscreen');
             Route::get('/activate/{id}', 'active')->name('users.active');
             Route::get('/deactivate/{id}', 'deactive')->name('users.deactive');
         });
+    });
+
+    /**
+     * Profile
+     */
+    Route::controller(App\Http\Controllers\Backend\ProfileController::class)->group(function () {
         Route::prefix('profile')->group(function () {
             Route::get('/{user}', 'user_profile')->name('user.profile');
-
-            Route::post('/{user}/update', 'update_profile')->name('profile.update');
+            Route::patch('/my_profile/update/', 'update_my_profile')->name('profile.update');
         });
+        Route::get('/lang/{language}', 'change_language')->name('lang.update');
+        Route::get('/lockscreen', 'lockscreen')->name('users.lockscreen');
         Route::get('/my_profile/{user}', 'my_profile')->name('my.profile');
     });
 
