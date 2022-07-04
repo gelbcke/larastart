@@ -22,21 +22,31 @@
 				<a href="{{ route('my.profile', auth()->user()->id) }}" class="dropdown-item">
 					{{ __('layouts.profile') }}
 				</a>
-				<a href="{{ route('users.index') }}" class="dropdown-item">
-					{{ __('layouts.users') }}
-				</a>
-				<a href="{{ route('logs.index') }}" class="dropdown-item">
-					{{ __('layouts.logs') }}
-				</a>
-				<a href="{{ route('roles.index') }}" class="dropdown-item">
-					{{ __('layouts.roles') }}
-				</a>
-				<a href="{{ route('permissions.index') }}" class="dropdown-item">
-					{{ __('layouts.permissions') }}
-				</a>
-				<a href="{{ route('system_settings') }}" class="dropdown-item">
-					{{ __('layouts.system_settings') }}
-				</a>
+				@can('users-list')
+					<a href="{{ route('users.index') }}" class="dropdown-item">
+						{{ __('layouts.users') }}
+					</a>
+				@endcan
+				@can('logs-list')
+					<a href="{{ route('logs.index') }}" class="dropdown-item">
+						{{ __('layouts.logs') }}
+					</a>
+				@endcan
+				@can('roles-list')
+					<a href="{{ route('roles.index') }}" class="dropdown-item">
+						{{ __('layouts.roles') }}
+					</a>
+				@endcan
+				@can('permissions-list')
+					<a href="{{ route('permissions.index') }}" class="dropdown-item">
+						{{ __('layouts.permissions') }}
+					</a>
+				@endcan
+				@can('settings-list')
+					<a href="{{ route('system_settings') }}" class="dropdown-item">
+						{{ __('layouts.system_settings') }}
+					</a>
+				@endcan
 				<a class="dropdown-item" href="{{ route('logout') }}"
 					onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
